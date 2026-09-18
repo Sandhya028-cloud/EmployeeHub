@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee - EmployeeHub</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .header {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #d1d5db;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>EmployeeHub</h1>
+        <p>Employee Management Portal</p>
+    </div>
+
+    <div class="container">
+
+        <h2>Add Employee</h2>
+
+        <form id="employeeForm">
+
+            <label>Employee Name</label>
+            <input type="text" name="name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Department</label>
+            <input type="text" name="department" required>
+
+            <label>Role</label>
+            <input type="text" name="role" required>
+
+            <label>Salary</label>
+            <input type="number" name="salary" required min="0">
+
+            <button type="submit">Add Employee</button>
+
+        </form>
+
+        <a href="/" class="back">← Back to Dashboard</a>
+
+    </div>
+
+<script>
+    document.getElementById("employeeForm").addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const employee = {
+            name: document.querySelector('[name="name"]').value,
+            email: document.querySelector('[name="email"]').value,
+            department: document.querySelector('[name="department"]').value,
+            role: document.querySelector('[name="role"]').value,
+            salary: Number(document.querySelector('[name="salary"]').value)
+        };
+
+        fetch("/employees", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(employee)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to add employee");
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Employee added successfully!");
+            document.getElementById("employeeForm").reset();
+        })
+        .catch(error => {
+            alert("Error adding employee");
+            console.error(error);
+        });
+
+    });
+</script>
+
+</body>
+
+</html>
