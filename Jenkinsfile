@@ -35,19 +35,18 @@ pipeline {
 
          stage('Docker Push') {
     steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'dockerhub-creds',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
+        withCredentials([string(
+            credentialsId: 'dockerhub-token',
+            variable: 'DOCKER_TOKEN'
         )]) {
 
             powershell '''
-                $env:DOCKER_PASS | docker login -u $env:DOCKER_USER --password-stdin
+                $env:DOCKER_TOKEN | docker login -u sandhyakadam --password-stdin
             '''
 
-            bat 'docker tag employeehub:1.0 %DOCKER_USER%/employeehub:1.0'
+            bat 'docker tag employeehub:1.0 sandhyakadam/employeehub:1.0'
 
-            bat 'docker push %DOCKER_USER%/employeehub:1.0'
+            bat 'docker push sandhyakadam/employeehub:1.0'
         }
     }
 }
