@@ -27,12 +27,12 @@ pipeline {
             }
         }
 
-
-       stage('Docker Check') {
-                steps {
-                bat 'docker --version'
-                     }
-               }
+        stage('Docker Build') {
+                  steps {
+             bat 'docker build -t employeehub:1.0 .'
+                       }
+                   }
+       
     }
 
     post {
