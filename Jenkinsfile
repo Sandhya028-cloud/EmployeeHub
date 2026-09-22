@@ -33,6 +33,17 @@ pipeline {
                        }
                    }
 
+
+
+
+stage('Docker Environment Check') {
+    steps {
+        bat 'whoami'
+        bat 'docker version'
+        bat 'docker context show'
+    }
+}
+
          stage('Docker Push') {
     steps {
         withCredentials([string(
