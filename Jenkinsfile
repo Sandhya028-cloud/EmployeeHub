@@ -32,6 +32,23 @@ pipeline {
              bat 'docker build -t employeehub:1.0 .'
                        }
                    }
+
+         stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+
+            bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+
+            bat 'docker tag employeehub:1.0 %DOCKER_USER%/employeehub:1.0'
+
+            bat 'docker push %DOCKER_USER%/employeehub:1.0'
+        }
+    }
+}
        
     }
 
