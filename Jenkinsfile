@@ -49,20 +49,19 @@ stage('Docker Environment Check') {
 
         stage('Docker Push') {
     steps {
-        withCredentials([string(
-            credentialsId: 'dockerhub-token',
-            variable: 'DOCKER_TOKEN'
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
         )]) {
 
             bat '''
-                set DOCKER_CONFIG=C:\\ProgramData\\Jenkins\\.docker
-                if not exist "%DOCKER_CONFIG%" mkdir "%DOCKER_CONFIG%"
-                echo %DOCKER_TOKEN% | docker login -u sandhyakadam --password-stdin
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
             '''
 
-            bat 'docker tag employeehub:1.0 sandhyakadam/employeehub:1.0'
+            bat 'docker tag employeehub:1.0 %DOCKER_USER%/employeehub:1.0'
 
-            bat 'docker push sandhyakadam/employeehub:1.0'
+            bat 'docker push %DOCKER_USER%/employeehub:1.0'
         }
     }
 }
