@@ -45,30 +45,19 @@ stage('Docker Environment Check') {
 }
 
 
-stage('Credential Check') {
-    steps {
-        withCredentials([string(
-            credentialsId: 'dockerhub-token',
-            variable: 'DOCKER_TOKEN'
-        )]) {
-            powershell '''
-                Write-Host "Token length:" $env:DOCKER_TOKEN.Length
-            '''
-        }
-    }
-}
 
 
-
-         stage('Docker Push') {
+        stage('Docker Push') {
     steps {
         withCredentials([string(
             credentialsId: 'dockerhub-token',
             variable: 'DOCKER_TOKEN'
         )]) {
 
-            powershell '''
-                $env:DOCKER_TOKEN | docker login -u sandhyakadam --password-stdin
+            bat '''
+                set DOCKER_CONFIG=C:\\ProgramData\\Jenkins\\.docker
+                if not exist "%DOCKER_CONFIG%" mkdir "%DOCKER_CONFIG%"
+                echo %DOCKER_TOKEN% | docker login -u sandhyakadam --password-stdin
             '''
 
             bat 'docker tag employeehub:1.0 sandhyakadam/employeehub:1.0'
