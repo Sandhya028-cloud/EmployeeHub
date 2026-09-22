@@ -44,6 +44,22 @@ stage('Docker Environment Check') {
     }
 }
 
+
+stage('Credential Check') {
+    steps {
+        withCredentials([string(
+            credentialsId: 'dockerhub-token',
+            variable: 'DOCKER_TOKEN'
+        )]) {
+            powershell '''
+                Write-Host "Token length:" $env:DOCKER_TOKEN.Length
+            '''
+        }
+    }
+}
+
+
+
          stage('Docker Push') {
     steps {
         withCredentials([string(
